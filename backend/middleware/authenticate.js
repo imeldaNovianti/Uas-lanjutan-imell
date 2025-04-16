@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const authenticate = (req, res, next) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.cookies.token || req.header("Authorization")?.replace("Bearer ", "");
   if (!token) return res.status(401).json({ message: "Token tidak ditemukan" });
 
   try {

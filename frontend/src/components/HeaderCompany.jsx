@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Home, Briefcase, Users, LogOut } from "lucide-react";
+import { Home, Briefcase, Users, LogOut, Edit, Trash2 } from "lucide-react";
 
 export default function HeaderCompany() {
   const navigate = useNavigate();
@@ -51,6 +51,15 @@ export default function HeaderCompany() {
             All Jobs
           </Link>
 
+          {/* Tombol Edit dan Delete jika berada di halaman All Jobs */}
+          {/* <Link
+            to="/company/edit-job"
+            className="flex items-center gap-2 text-green-500 hover:text-green-600 transition duration-200"
+          >
+            <Edit size={18} />
+            Edit Job
+          </Link> */}
+
           <button
             onClick={handleLogout}
             className="flex items-center gap-2 text-red-400 hover:text-red-600 transition duration-200"
@@ -59,6 +68,15 @@ export default function HeaderCompany() {
             <LogOut size={18} />
             Logout
           </button>
+
+          {/* Tombol Delete jika berada di halaman All Jobs */}
+          {/* <button
+            className="flex items-center gap-2 text-red-500 hover:text-red-600 transition duration-200"
+            aria-label="Delete Job"
+          >
+            <Trash2 size={18} />
+            Delete Job
+          </button> */}
         </nav>
       </div>
     </header>

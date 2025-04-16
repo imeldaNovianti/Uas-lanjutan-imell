@@ -7,7 +7,8 @@ import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import companyRoutes from "./routes/companyRoutes.js";
-import jobRoutes from "./routes/jobRoutes.js";  // Untuk CRUD lowongan kerja (private dan public)
+import jobRoutes from "./routes/jobRoutes.js";  // CRUD lowongan kerja
+import applicationRoutes from "./routes/applicationRoutes.js"; // 🆕 Apply pekerjaan (upload CV)
 
 dotenv.config();
 
@@ -22,14 +23,16 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Routes
-app.use("/api/auth", authRoutes);         // Login, register user & company
-app.use("/api/profile", profileRoutes);   // Endpoint untuk profile user
-app.use("/api/company", companyRoutes);   // Endpoint khusus untuk role company
+// 🆕 Static folder untuk akses file CV yang diunggah
+app.use('/uploads', express.static('uploads'));
 
-// Pastikan rute untuk job dibedakan antara public dan private
-app.use("/api/jobs", jobRoutes);          // Endpoint private job (POST, PUT, DELETE, GET)
-app.use("/api/public/jobs", jobRoutes);   // Endpoint public job (GET)
+// Routes
+app.use("/api/auth", authRoutes);           // Login, register user & company
+app.use("/api/profile", profileRoutes);     // Endpoint untuk profile user
+app.use("/api/company", companyRoutes);     // Endpoint khusus untuk role company
+app.use("/api/jobs", jobRoutes);            // Endpoint private job (POST, PUT, DELETE, GET)
+app.use("/api/public/jobs", jobRoutes);     // Endpoint public job (GET)
+app.use("/api/applications", applicationRoutes); // 🆕 Apply job (upload CV)
 
 // 404 Handler
 app.use((req, res) => {

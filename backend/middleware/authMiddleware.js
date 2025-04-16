@@ -1,26 +1,16 @@
-// import jwt from "jsonwebtoken";
-// import { SECRET_KEY } from "../config/config.js";
+import jwt from 'jsonwebtoken';
 
-// export const authenticate = (req, res, next) => {
-//   const token = req.cookies.token;  // Mengambil token dari cookie
-  
-//   if (!token) {
-//     return res.status(401).json({ message: "Akses ditolak, token tidak ditemukan!" });
-//   }
-  
-//   try {
-//     const decoded = jwt.verify(token, SECRET_KEY);
-//     req.user = decoded;  // Menyimpan informasi pengguna yang terautentikasi
-//     next();
-//   } catch (error) {
-//     return res.status(401).json({ message: "Token tidak valid!" });
-//   }
-// };
+const authMiddleware = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.status(401).json({ success: false, message: 'Unauthorized' });
 
-// export const isCompany = (req, res, next) => {
-//   if (req.user.role !== 'company') {
-//     return res.status(403).json({ message: "Akses hanya untuk perusahaan!" });
-//   }
-//   next();
-// };
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res.status(403).json({ success: false, message: 'Token tidak valid' });
+  }
+};
 
+export default authMiddleware;

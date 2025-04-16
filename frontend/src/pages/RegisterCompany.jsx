@@ -22,7 +22,7 @@ const RegisterCompany = () => {
     e.preventDefault();
     setError("");
     try {
-      await axios.post("http://localhost:4000/api/company/register", form, {
+      await axios.post("http://localhost:4000/api/auth/company/register", form, {
         withCredentials: true,
       });
       navigate("/company/login");

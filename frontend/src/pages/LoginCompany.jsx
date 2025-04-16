@@ -14,7 +14,7 @@ export default function LoginCompany() {
 
     try {
       const res = await axios.post(
-        "http://localhost:4000/api/company/login",
+        "http://localhost:4000/api/auth/company/login",
         { email, password },
         { withCredentials: true }
       );

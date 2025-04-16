@@ -4,7 +4,7 @@ import { ArrowLeftCircle } from "lucide-react";
 import axios from "axios";  // Pastikan Axios di-import
 
 export default function LamarPekerjaan() {
-  const { id } = useParams();
+  const { id } = useParams(); // Mengambil 'id' dari URL
   const [file, setFile] = useState(null);
   const [message, setMessage] = useState("");
 
@@ -17,21 +17,22 @@ export default function LamarPekerjaan() {
     }
 
     const formData = new FormData();
-    formData.append("cv", file); // 'cv' adalah nama field untuk file di backend
+    formData.append("cv", file); // Menambahkan file CV ke dalam formData
 
     try {
       const response = await axios.post(
-        `http://localhost:4000/api/applications/${id}`,  // Sesuaikan URL dengan endpoint backend
+        `http://localhost:4000/api/applications/${id}`,  // Pastikan URL sesuai dengan endpoint backend
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",  // Pastikan header untuk file upload
           },
+          withCredentials: true
         }
       );
 
-      if (response.data.success) {
-        setMessage("✅ CV berhasil diunggah! Kami akan menghubungi Anda.");
+      if (response.data.message) {
+        setMessage(response.data.message); // Menampilkan pesan dari backend
       } else {
         setMessage("❗ Terjadi kesalahan saat mengunggah CV.");
       }

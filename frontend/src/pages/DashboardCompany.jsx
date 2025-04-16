@@ -1,20 +1,10 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Briefcase,
-  Users,
-  FileText,
-  XCircle,
-  PlusCircle,
-  Activity,
-  Settings,
-  ClipboardList
-} from "lucide-react";
+import { Briefcase, Activity, PlusCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export default function DashboardCompany() {
   const [profile, setProfile] = useState({});
-  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -29,46 +19,8 @@ export default function DashboardCompany() {
     }
   };
 
-  const fetchJobs = async () => {
-    try {
-      const res = await axios.get("http://localhost:4000/api/company/jobs", {
-        withCredentials: true
-      });
-
-      // Cek apakah data langsung berupa array atau objek dengan key "jobs"
-      if (Array.isArray(res.data)) {
-        setJobs(res.data);
-      } else if (Array.isArray(res.data.jobs)) {
-        setJobs(res.data.jobs);
-      } else {
-        setJobs([]);
-        console.warn("Data lowongan tidak dalam format array:", res.data);
-      }
-    } catch (err) {
-      console.error("Gagal mengambil lowongan:", err.response?.data || err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeleteJob = async (id) => {
-    const confirmDelete = confirm("Apakah Anda yakin ingin menghapus lowongan ini?");
-    if (!confirmDelete) return;
-
-    try {
-      await axios.delete(`http://localhost:4000/api/company/jobs/${id}`, {
-        withCredentials: true
-      });
-      setJobs(jobs.filter((job) => job.id !== id));
-    } catch (err) {
-      console.error("Gagal menghapus lowongan:", err.response?.data || err.message);
-      alert("Terjadi kesalahan saat menghapus lowongan.");
-    }
-  };
-
   useEffect(() => {
     fetchProfile();
-    fetchJobs();
   }, []);
 
   return (
@@ -88,20 +40,60 @@ export default function DashboardCompany() {
         </div>
       </div>
 
-      {/* Statistik */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-        {[
-          { label: "Lowongan Aktif", count: jobs?.length || 0, color: "text-blue-700", icon: <FileText /> },
-          { label: "Total Pelamar", count: 120, color: "text-green-700", icon: <Users /> },
-          { label: "Interview Berlangsung", count: 3, color: "text-yellow-600", icon: <ClipboardList /> },
-          { label: "Ditolak", count: 2, color: "text-red-500", icon: <XCircle /> }
-        ].map((stat, idx) => (
-          <div key={idx} className="bg-white p-5 rounded-xl shadow hover:shadow-lg text-center transition duration-300 hover:scale-[1.03]">
-            <div className="flex justify-center mb-2 text-2xl">{stat.icon}</div>
-            <p className={`text-2xl font-bold ${stat.color}`}>{stat.count}</p>
-            <p className="text-sm text-gray-500">{stat.label}</p>
+      {/* Iklan */}
+      <div className="bg-yellow-100 p-4 rounded-xl mb-6 text-center">
+        <h3 className="text-xl font-semibold text-gray-800 mb-2">Iklan</h3>
+        <p className="text-gray-700 mb-2">Temukan lebih banyak peluang kerja di situs kami!</p>
+        <button
+          onClick={() => navigate("/ads")}
+          className="px-6 py-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition"
+        >
+
+
+        </button>
+      </div>
+
+      {/* Iklan Lainnya */}
+      <div className="mb-6">
+        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-800">
+          <Activity className="text-purple-600" /> Iklan di Platform Kami
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Iklan 1 */}
+          <div className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition">
+            <img src="https://i.pinimg.com/736x/19/93/77/1993772f7b7e4d4cbf04cbdf95d1af0e.jpg" alt="Iklan 1" className="rounded-lg mb-4 w-full h-32 object-cover" />
+            <h4 className="font-semibold text-lg mb-2">Iklan Lowongan Pekerjaan A</h4>
+            <p className="text-gray-600 mb-2">Bergabunglah dengan perusahaan global yang sedang berkembang pesat!</p>
           </div>
-        ))}
+
+          {/* Iklan 2 */}
+          <div className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition">
+            <img src="https://i.pinimg.com/736x/c4/61/ce/c461ce34d6528ff2c2e3566bbe5a0bf6.jpg" alt="Iklan 2" className="rounded-lg mb-4 w-full h-32 object-cover" />
+            <h4 className="font-semibold text-lg mb-2">Iklan Lowongan Pekerjaan B</h4>
+            <p className="text-gray-600 mb-2">Karier baru yang menarik menunggu Anda! Klik untuk informasi lebih lanjut.</p>
+          </div>
+
+          {/* Iklan 3 */}
+          <div className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition">
+            <img src="https://i.pinimg.com/736x/91/b1/bf/91b1bf443737828460d93dce322d4a74.jpg" alt="Iklan 3" className="rounded-lg mb-4 w-full h-32 object-cover" />
+            <h4 className="font-semibold text-lg mb-2">Iklan Lowongan Pekerjaan C</h4>
+            <p className="text-gray-600 mb-2">Temukan peluang karier yang lebih baik di industri favorit Anda!</p>
+          </div>
+
+          {/* Iklan 4 */}
+          <div className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition">
+            <img src="https://i.pinimg.com/736x/f6/02/15/f60215e5180f327c254711416c401ecc.jpg" alt="Iklan 4" className="rounded-lg mb-4 w-full h-32 object-cover" />
+            <h4 className="font-semibold text-lg mb-2">Iklan Lowongan Pekerjaan D</h4>
+            <p className="text-gray-600 mb-2">Temukan peluang karier menarik untuk masa depan cerah Anda!</p>
+          </div>
+
+          {/* Iklan 5 */}
+          <div className="bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition">
+            <img src="https://i.pinimg.com/736x/b5/9f/57/b59f57f0bd6ebfabe75731f4b533804d.jpg" alt="Iklan 5" className="rounded-lg mb-4 w-full h-32 object-cover" />
+            <h4 className="font-semibold text-lg mb-2">Iklan Lowongan Pekerjaan E</h4>
+            <p className="text-gray-600 mb-2">Gabung bersama kami untuk mengejar peluang karier yang lebih baik!</p>
+          </div>
+        </div>
       </div>
 
       {/* Aksi Cepat */}
@@ -116,59 +108,7 @@ export default function DashboardCompany() {
           >
             <PlusCircle /> Posting Lowongan
           </button>
-          <button
-            onClick={() => navigate("/company/applicants")}
-            className="bg-gradient-to-r from-green-500 to-green-700 text-white py-3 rounded-xl shadow hover:scale-105 transition flex items-center justify-center gap-2"
-          >
-            <Users /> Lihat Pelamar
-          </button>
-          <button
-            onClick={() => navigate("/company/edit-profile")}
-            className="bg-gradient-to-r from-gray-500 to-gray-700 text-white py-3 rounded-xl shadow hover:scale-105 transition flex items-center justify-center gap-2"
-          >
-            <Settings /> Edit Profil
-          </button>
         </div>
-      </div>
-
-      {/* Daftar Lowongan */}
-      <div>
-        <h3 className="text-xl font-semibold mb-4 flex items-center gap-2 text-gray-800">
-          <FileText className="text-gray-700" /> Lowongan Anda
-        </h3>
-        {loading ? (
-          <p className="text-gray-600 italic">Memuat data lowongan...</p>
-        ) : jobs?.length === 0 ? (
-          <p className="text-gray-600 italic">Belum ada lowongan yang diposting.</p>
-        ) : (
-          <div className="space-y-4">
-            {jobs.map((job) => (
-              <div key={job.id} className="border p-5 rounded-xl bg-white shadow hover:shadow-md transition hover:scale-[1.01]">
-                <div className="flex justify-between items-start flex-col md:flex-row">
-                  <div>
-                    <h4 className="text-lg font-bold text-gray-800">{job.judul}</h4>
-                    <p className="text-sm text-gray-600">{job.lokasi} - {job.tipe}</p>
-                    <p className="mt-2 text-gray-700 line-clamp-2">{job.deskripsi}</p>
-                  </div>
-                  <div className="flex gap-2 mt-4 md:mt-0">
-                    <button
-                      onClick={() => navigate(`/company/edit-job/${job.id}`)}
-                      className="px-3 py-1 bg-yellow-400 text-white rounded hover:bg-yellow-500 hover:scale-105 transition"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteJob(job.id)}
-                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 hover:scale-105 transition flex items-center gap-1"
-                    >
-                      <XCircle size={18} /> Hapus
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
       </div>
     </div>
   );

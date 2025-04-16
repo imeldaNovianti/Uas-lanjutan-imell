@@ -5,6 +5,8 @@ export const postJob = async (req, res) => {
   const { title, description, location, type, salary } = req.body;
   const companyId = req.company?.id;
 
+  console.log (companyId)
+
   if (!title || !description || !location || !type || !salary) {
     return res.status(400).json({ error: "Semua field harus diisi!" });
   }

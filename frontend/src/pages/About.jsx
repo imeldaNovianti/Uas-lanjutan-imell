@@ -20,15 +20,9 @@ export default function About() {
 
   // Navigasi berdasarkan caption gambar
   const handleImageClick = (caption) => {
-    const routes = {
-      "aksesibilitas": "/aksesibilitas",
-      "pusat keamanan": "/pusat-keamanan"
-    };
-
-    const path = routes[caption.toLowerCase()];
-    if (path) {
-      navigate(path);
-    }
+    // Tautan ke Google berdasarkan caption gambar
+    const searchQuery = caption.toLowerCase().replace(/\s+/g, "+"); // Mengganti spasi dengan '+' untuk query URL
+    window.open(`https://www.google.com/search?q=${searchQuery}`, "_blank");
   };
 
   const container = {

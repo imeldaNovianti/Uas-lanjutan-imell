@@ -113,7 +113,7 @@ router.post("/company/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const result = await pool.query(
-      "INSERT INTO companies (name, email, password, location, industry, company_logo, description) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, name, email, company_name",
+      "INSERT INTO companies (name, email, password, location, industry, company_logo, description) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING id, name, email, name",
       [full_name || "", email, hashedPassword, location, industry, company_logo, description]
     );
 

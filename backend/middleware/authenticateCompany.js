@@ -13,7 +13,7 @@ export const authenticateCompany = (req, res, next) => {
 
   try {
     // Verifikasi token
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Set data perusahaan pada request untuk digunakan di route berikutnya
     req.company = decoded;

@@ -1,72 +1,110 @@
-// import Job from "../models/job.js";
-// import Application from "../models/application.js";  // Pastikan model 'Application' ada dan benar
-// import { uploadCV } from "../helpers/uploadHelper.js"; // Bisa dibuat jika perlu
-// import fs from 'fs';
+import db from '../config/db.js';
 
-// // Fungsi untuk mengirim lamaran pekerjaan
-// export const applyJob = async (req, res) => {
-//   try {
-//     const { jobId } = req.body;  // Pastikan jobId ada dalam body
+// ==============================
+// Submit Lamaran Pekerjaan
+// ==============================
+export const applyJob = async (req, res) => {
+  try {
+    const jobId = req.params.jobId;
+    const userId = req.user.id; // dari authMiddleware
+    const cvPath = req.file.path;
 
-//     // Cari lowongan berdasarkan jobId
-//     const job = await Job.findByPk(jobId);
-//     if (!job) {
-//       return res.status(404).json({ success: false, message: "Lowongan tidak ditemukan." });
-//     }
+    await db.query(
+      'INSERT INTO applications (user_id, job_id, cv_file, status, applied_at) VALUES ($1, $2, $3, $4, NOW())',
+      [userId, jobId, cvPath, 'pending']
+    );
 
-//     // Cek apakah user sudah melamar pekerjaan ini
-//     const existingApplication = await Application.findOne({
-//       where: {
-//         jobId: jobId,
-//         userId: req.user.id,  // Ambil userId dari req.user yang sudah di-validate
-//       }
-//     });
+    res.status(201).json({ success: true, message: 'Lamaran berhasil dikirim.' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ success: false, message: 'Gagal melamar pekerjaan.' });
+  }
+};
 
-//     if (existingApplication) {
-//       return res.status(400).json({ success: false, message: "Anda sudah melamar pekerjaan ini." });
-//     }
+// ==============================
+// Ambil Semua Pelamar (untuk company)
+// ==============================
+export const getMyApplications = async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT 
+        applications.id AS application_id,
+        users.full_name AS name,
+        users.email,
+        jobs.title AS job,
+        applications.cv_file,
+        applications.status,
+        applications.applied_at
+      FROM applications
+      JOIN users ON applications.user_id = users.id
+      JOIN jobs ON applications.job_id = jobs.id
+      ORDER BY applications.applied_at DESC
+    `);
 
-//     // Proses penyimpanan file CV
-//     const filePath = req.file ? req.file.path : null;  // Menyimpan path file jika ada
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: true, applications: [] });
+    }
 
-//     // Simpan lamaran pekerjaan ke database
-//     const application = await Application.create({
-//       jobId,
-//       userId: req.user.id,
-//       cvPath: filePath,  // Menyimpan path file CV
-//     });
+    res.status(200).json({
+      success: true,
+      applications: result.rows,
+    });
+  } catch (error) {
+    console.error("Error getMyApplications:", error);
+    res.status(500).json({ success: false, message: "Terjadi kesalahan, coba lagi." });
+  }
+};
 
-//     return res.status(200).json({
-//       success: true,
-//       message: "Lamaran pekerjaan berhasil dikirim!",
-//       application,
-//     });
-//   } catch (error) {
-//     console.error("Error:", error);
-//     res.status(500).json({ success: false, message: "Terjadi kesalahan, coba lagi." });
-//   }
-// };
+// ==============================
+// Update Lamaran (untuk pelamar)
+// ==============================
+export const updateApplication = async (req, res) => {
+  try {
+    const applicationId = req.params.applicationId;
+    const { status } = req.body;  // Status baru (misalnya: diterima, ditolak)
 
-// // Fungsi untuk mengambil semua lamaran pekerjaan milik user login
-// export const getMyApplications = async (req, res) => {
-//   try {
-//     const applications = await Application.findAll({
-//       where: {
-//         userId: req.user.id,
-//       },
-//       include: [Job],  // Termasuk data pekerjaan terkait
-//     });
+    const result = await db.query(
+      'UPDATE applications SET status = $1 WHERE id = $2 AND user_id = $3 RETURNING *',
+      [status, applicationId, req.user.id] // memastikan hanya pelamar yang bisa mengupdate status miliknya
+    );
 
-//     if (applications.length === 0) {
-//       return res.status(404).json({ success: false, message: "Anda belum melamar pekerjaan." });
-//     }
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Lamaran tidak ditemukan atau tidak milik Anda.' });
+    }
 
-//     res.status(200).json({
-//       success: true,
-//       applications,
-//     });
-//   } catch (error) {
-//     console.error("Error:", error);
-//     res.status(500).json({ success: false, message: "Terjadi kesalahan, coba lagi." });
-//   }
-// };
+    res.status(200).json({
+      success: true,
+      message: 'Status lamaran berhasil diperbarui.',
+      application: result.rows[0],
+    });
+  } catch (error) {
+    console.error("Error updateApplication:", error);
+    res.status(500).json({ success: false, message: 'Gagal memperbarui status lamaran.' });
+  }
+};
+
+// ==============================
+// Hapus Lamaran (untuk pelamar)
+// ==============================
+export const deleteApplication = async (req, res) => {
+  try {
+    const applicationId = req.params.applicationId;
+
+    const result = await db.query(
+      'DELETE FROM applications WHERE id = $1 AND user_id = $2 RETURNING *',
+      [applicationId, req.user.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ success: false, message: 'Lamaran tidak ditemukan atau tidak milik Anda.' });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Lamaran berhasil dihapus.',
+    });
+  } catch (error) {
+    console.error("Error deleteApplication:", error);
+    res.status(500).json({ success: false, message: 'Gagal menghapus lamaran.' });
+  }
+};

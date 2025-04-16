@@ -1,41 +1,47 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { motion } from "framer-motion"; // Import framer-motion untuk animasi
+import { motion } from "framer-motion";
 import Footer from "../components/Footer";
 
 export default function Home() {
   const recommendations = [
-    { title: "Frontend Developer di Jakarta", company: "TechNova", type: "Full Time" },
-    { title: "Digital Marketing Specialist", company: "MarketWise", type: "Remote" },
-    { title: "UI/UX Designer - Hybrid", company: "CreativeHub", type: "Hybrid" },
-    { title: "Backend Engineer Golang", company: "FinSync", type: "Full Time" },
-    { title: "Customer Support (Remote)", company: "Helpster", type: "Remote" },
+    { id: 1, title: "Frontend Developer di Jakarta", company: "TechNova", type: "Full Time" },
+    { id: 2, title: "Digital Marketing Specialist", company: "MarketWise", type: "Remote" },
+    { id: 3, title: "UI/UX Designer - Hybrid", company: "CreativeHub", type: "Hybrid" },
+    { id: 4, title: "Backend Engineer Golang", company: "FinSync", type: "Full Time" },
+    { id: 5, title: "Customer Support (Remote)", company: "Helpster", type: "Remote" },
   ];
 
   const ads = [
     {
       title: "Kembangkan kariermu dengan kursus online!",
-      image: "https://i.pinimg.com/736x/e9/19/75/e91975aa0af09b0767f754765839a300.jpg"
+      image: "https://i.pinimg.com/736x/e9/19/75/e91975aa0af09b0767f754765839a300.jpg",
+      url: "https://www.google.com/search?q=kursus+online+gratis"
     },
     {
       title: "Rekrut kandidat terbaik di I CLOUD JOB",
-      image: "https://i.pinimg.com/736x/e1/c1/56/e1c156223f1a32a0b0a445157998c27e.jpg"
+      image: "https://i.pinimg.com/736x/e1/c1/56/e1c156223f1a32a0b0a445157998c27e.jpg",
+      url: "https://www.google.com/search?q=rekrut+kandidat+pekerjaan"
     },
     {
       title: "Upgrade CV-mu dengan desain profesional",
-      image: "https://i.pinimg.com/736x/b2/87/7d/b2877db277624b6b762d82fa7dc05a51.jpg"
+      image: "https://i.pinimg.com/736x/b2/87/7d/b2877db277624b6b762d82fa7dc05a51.jpg",
+      url: "https://www.google.com/search?q=desain+cv+profesional"
     },
     {
       title: "Tips wawancara kerja sukses dari HR",
-      image: "https://i.pinimg.com/736x/2c/18/aa/2c18aac8748c0a76b0b5fa69cc2d957d.jpg"
+      image: "https://i.pinimg.com/736x/2c/18/aa/2c18aac8748c0a76b0b5fa69cc2d957d.jpg",
+      url: "https://www.google.com/search?q=tips+wawancara+kerja"
     },
     {
       title: "Bangun portofolio dengan proyek nyata",
-      image: "src/assets/11.jpg"
+      image: "https://i.pinimg.com/736x/1c/1f/5d/1c1f5d103ef4b3ccc284aa2e77c9900a.jpg",
+      url: "https://www.google.com/search?q=buat+portofolio+proyek+nyata"
     },
     {
       title: "Kenali tren teknologi terbaru 2025",
-      image: "src/assets/1.jpg"
+      image: "https://i.pinimg.com/736x/b5/03/09/b50309a02f54651f7262e56e66a7926f.jpg",
+      url: "https://www.google.com/search?q=tren+teknologi+2025"
     },
   ];
 
@@ -46,23 +52,28 @@ export default function Home() {
           {/* Sidebar Kiri - Iklan */}
           <aside className="space-y-4 col-span-1">
             {ads.slice(0, 3).map((ad, idx) => (
-              <motion.div 
-                key={idx} 
-                className="bg-white rounded-xl shadow-md p-3 hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: idx * 0.3 }}
+              <a
+                href={ad.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={idx}
               >
-                <img src={ad.image} alt={ad.title} className="w-full h-auto rounded-md mb-2" />
-                <p className="font-semibold text-gray-800 text-sm">{ad.title}</p>
-              </motion.div>
+                <motion.div
+                  className="bg-white rounded-xl shadow-md p-3 hover:shadow-lg hover:scale-105 transition-transform duration-300"
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: idx * 0.3 }}
+                >
+                  <img src={ad.image} alt={ad.title} className="w-full h-auto rounded-md mb-2" />
+                  <p className="font-semibold text-gray-800 text-sm">{ad.title}</p>
+                </motion.div>
+              </a>
             ))}
           </aside>
 
           {/* Konten Tengah */}
           <main className="space-y-6 col-span-1">
-            {/* Notifikasi kerja */}
-            <motion.div 
+            <motion.div
               className="bg-white rounded-xl shadow-md p-4 hover:bg-blue-50 hover:scale-105 transition-all duration-300"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -77,8 +88,7 @@ export default function Home() {
               </button>
             </motion.div>
 
-            {/* Post singkat */}
-            <motion.div 
+            <motion.div
               className="bg-white rounded-xl shadow-md p-4 flex items-center gap-4 hover:bg-gray-50 hover:scale-105 transition-all duration-300"
               initial={{ opacity: 0, x: -50 }}
               animate={{ opacity: 1, x: 0 }}
@@ -96,8 +106,7 @@ export default function Home() {
               />
             </motion.div>
 
-            {/* Rekomendasi Pekerjaan */}
-            <motion.div 
+            <motion.div
               className="bg-white p-4 rounded-xl shadow-md"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -117,41 +126,46 @@ export default function Home() {
                       {job.company} • {job.type}
                     </p>
                   </div>
-                  <Link to="/jobs" className="text-blue-500 hover:underline">
+                  <Link to={`/jobs/${job.id}`} className="text-blue-500 hover:underline">
                     <ArrowRight size={18} />
                   </Link>
                 </motion.div>
               ))}
             </motion.div>
 
-            {/* Akses Fitur Pelamar */}
-            <motion.div 
+            <motion.div
               className=" bg-gray-100 text-gray-800 text-sm hover:bg-blue-100 hover:scale-105 transition-all duration-300"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
             >
-              <h2 className="font-semibold text-lg mb-2">Ayo, Mulai Pencarian Kariermu!</h2>
+              <h2 className="font-semibold text-lg mb-2">Mulai Pencarian Kariermu!</h2>
               <p className="text-sm mb-3">Masukkan informasi pekerjaan yang kamu minati dan mulai lamar pekerjaan yang sesuai.</p>
-              <Link to="/pelamar" className="bg-white text-blue-600 px-6 py-2 text-sm rounded-full hover:bg-gray-100 transition">
+              {/* <Link to="/LamarPekerjaan" className="bg-white text-blue-600 px-6 py-2 text-sm rounded-full hover:bg-gray-100 transition">
                 Masuk ke Fitur Pelamar
-              </Link>
+              </Link> */}
             </motion.div>
           </main>
 
           {/* Sidebar Kanan - Iklan tambahan */}
           <aside className="space-y-4 col-span-1">
             {ads.slice(3).map((ad, idx) => (
-              <motion.div 
-                key={idx} 
-                className="bg-white rounded-xl shadow-md p-3 hover:shadow-lg hover:scale-105 transition-transform duration-300"
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, delay: idx * 0.3 }}
+              <a
+                href={ad.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                key={idx}
               >
-                <img src={ad.image} alt={ad.title} className="w-full h-auto rounded-md mb-2" />
-                <p className="font-semibold text-gray-800 text-sm">{ad.title}</p>
-              </motion.div>
+                <motion.div
+                  className="bg-white rounded-xl shadow-md p-3 hover:shadow-lg hover:scale-105 transition-transform duration-300"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: idx * 0.3 }}
+                >
+                  <img src={ad.image} alt={ad.title} className="w-full h-auto rounded-md mb-2" />
+                  <p className="font-semibold text-gray-800 text-sm">{ad.title}</p>
+                </motion.div>
+              </a>
             ))}
           </aside>
         </div>

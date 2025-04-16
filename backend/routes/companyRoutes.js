@@ -29,4 +29,7 @@ router.put("/jobs/:id", authenticateCompany, updateJob);
 // ✅ Hapus lowongan
 router.delete("/jobs/:id", authenticateCompany, deleteJob);
 
+router.get("/jobs", authenticateCompany, getAllJobs);
+
+
 export default router;
